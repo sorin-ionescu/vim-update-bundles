@@ -1,3 +1,12 @@
+0.6     29 Jun 2011
+- Added doc/bundle-log.txt. :help bundle-log to see it.
+- Added --no-updates option to make adding/deleting bundles faster.
+- Support single-letter options (-v for --verbose, -n for --no-updates).
+- It's BundleCommand though Bundle-Command and BUNDLE COMMAND still work.
+- Added --help and --version.
+- Cleanups and doc fixes by Sorin Ionescu.
+- bugfix: changing branch name would merge instead of switching branches.
+
 0.4.1   11 May 2011
 - Support vundle-style short repo names thanks to Chris Toomey
 
@@ -29,3 +38,11 @@
 - added some tests! "rake test" in the git repo to run them.
 - created a changes file.
 
+0.1     20 Sep 2010
+- add ability to create new vim environment from scratch.
+- add BUNDLE-COMMAND directive to run shell commands.
+- remove dashes from directive (it's '" BUNDLE:' now, not '" --- BUNDLE:').
+- don't ever rm -rf, move deleted bundles to ~.vim/Trashed-Bundles.
+
+0.01    14 Aug 2010
+- initial release
