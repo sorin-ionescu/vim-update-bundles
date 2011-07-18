@@ -7,17 +7,22 @@ Use Pathogen and Git to manage your Vim plugins.
 
 ## Description
 
-To install a plugin, put lines like this in your ~/.vimrc:
+To install plugins, put lines like this in your ~/.vimrc:
 
-    " Bundle: jQuery                                      # https://github.com/vim-scripts/jQuery
-    " Bundle: scrooloose/nerdtree                         # https://github.com/scrooloose/nerdtree
-    " Bundle: https://github.com/scrooloose/nerdtree.git  # Full URL to the repository.
+    " Bundle: jQuery                                  # https://github.com/vim-scripts/jQuery
+    " Bundle: scrooloose/nerdtree                     # https://github.com/scrooloose/nerdtree
+    " Bundle: git://git.wincent.com/command-t.git     # Full URL to the repo to clone
 
-Now, run `./vim-update-bundles`.  Your plugins are installed and ready for use.
+When you run `./vim-update-bundles`, your plugins will be installed and ready for use.
 
 Type `:help bundles` from within Vim to show the list of plugins that you have installed.
 Hit Control-] on the bundle's name to jump to its documentation.
-Also make sure to look at the bundle-log.
+Also look at `:help bundle-log`.
+
+It works with [~/.dotfiles](http://github.com/ryanb/dotfiles) and Git submodules.
+
+If you're not already using Vim, just run `./vim-update-bundles` and a full environment
+will be set up for you.
 
 
 ## Installation
@@ -31,14 +36,10 @@ One of:
 
 ## Usage
 
-    $ ./vim-update-bundles --help
-
-If you're not already using Vim, vim-update-bundles will set up a typical vim environment.
-Edit your ~/.vimrc and run vim-update-bundles whenever you want changes to take effect.
-
-vim-update-bundles will use ~/.dotfiles if it exists; so, it works seamlessly
-with <http://github.com/ryanb/dotfiles> and friends. It also supports Git
-submodules (see the configuration section below).
+Just run `./vim-update-bundles` to install and remove plugins to match
+the ones named in your ~/.vimrc.
+If you're not already using Vim, vim-update-bundles will also install
+Pathogen, a sample .vimrc, and get everything ready to go.
 
 * _-n -\-no-updates_ Adds and deletes bundles but doesn't update them.
   This prevents vim-update-bundles from laboriously scrubbing through every
@@ -49,11 +50,19 @@ submodules (see the configuration section below).
   submodules before running vim-update bundles.
 
 * _-v -\-verbose_ prints more information about what's happening.
+  Pass multiple -v -v -v for more verbosity.
+
+* _-\-vimdir-path=path_ specifies the .vim directory that will contain
+  your autoload and bundles.
+
+* _\-vimrc-path_ specifies the location of your ~/.vimrc file.
+
+* _-\-help_ prints usage information.
 
 
 ## Specifying Plugins
 
-vim-update-bundles reads the plugins you want installed from your ~/.vimrc.
+vim-update-bundles reads the plugins you want installed from comments in your ~/.vimrc.
 Here are the directives it recognizes:
 
 #### Bundle:
@@ -90,48 +99,50 @@ ignore, mark them as static.
      " Static: my-plugin
 
 
+### Vundle
+
+vim-update-bundles also supports Vundle-style directives.  This allows you to use
+either tool to manage your bundles, whichever is more convenient at the time.
+This is brand new so problems are not unexpected.
+
+
 ## Configuration File
 
-All configuration options can be passed on the command line or placed in ~/.vim-update-bundles.conf.
-Putting "submodules=1" in the config file is the same as passing -s or --submodules on the command line.
-Blank lines and comments starting with '#' are ignored.
+All configuration options can be passed on the command line or placed in `~/.vim-update-bundles.conf`.
+Putting `submodules = 1` in the config file is the same as passing --submodules on the command line.
 
-String interpolation is performed on all values. First configuration settings
-are tried then environment variables. For instance, this would expand to
-"/home/_username_/.dotfiles/_username_/vim":
+Blank lines and comments starting with # are ignored.
 
-    vimdir_path = $dotfiles_path/$USERNAME/vim
+String interpolation is performed on all values.
+First configuration settings are tried, then environment variables.
+Here's an example vim-update-bundles.conf file:
+
+    # use shared vim environment
+    vimdir_path = $HOME/vim/$USERNAME
+    vimrc_path = $vimdir_path/vimrc
 
 
 ## Location of .vim and .vimrc
 
-Unless you have a custom dotfiles configuration, you can probably skip this
-section.
+vim-update-bundles will use ~/.vim and ~/.vimrc if they exist.
+Since this is also what Vim uses, most people can stop reading here.
 
-vim-update-bundles tries hard to figure out where you want to store your .vim
-directory and .vimrc file. It first looks for a dotfiles directory (~/.dotfiles
-or specified by dotfiles\_path).
+If ~/.dotfiles exists, vim-update-bundles will look for .dotfiles/vim and .dotfiles/vimrc.
 
-* dotfiles\_path = $HOME/.dotfiles
+If your dotfiles are in a custom place, you can specify --vimdir-path and --vimrc-path
+on the command line or in vim-update-bundles.conf.
 
-If dotfiles\_path exists, then vim-update-bundles will use it; otherwise, it
-will use the default location:
+If vim-update-bundles still can't find a Vim environment, it will create one for you.
+It creates the ~/.vim directory and gives you a default ~/.vimrc, downloads and installs Pathogen,
+and leaves everything ready to roll.
 
-* vimdir\_path = $dotfiles\_path/vim
-* vimdir\_path = $HOME/.vim
-
-Finally, these are the places that vim-update-bundles will look for a .vimrc:
-
-* vimrc\_path = $dotfiles\_path/vim/vimrc
-* vimrc\_path = $dotfiles\_path/vimrc
-* vimrc\_path = $HOME/.vim/vimrc
-* vimrc\_path = $HOME/.vimrc
-
-It always updates the ~/.vim and ~/.vimrc symlinks; so, Vim can find the correct
-files.
+If you're unsure which vimdir_path and vimrc_path are being used,
+`vim-update-bundles --verbose` will tell you.
 
 
 ## Authors
+
+This software is released under the [MIT License](http://en.wikipedia.org/wiki/Mit_license).
 
 * [Scott Bronson](http://github.com/bronson)
 * [Sorin Ionescu](http://github.com/sorin-ionescu)
